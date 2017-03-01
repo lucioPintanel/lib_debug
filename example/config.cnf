@@ -1,0 +1,16 @@
+#
+# Sessao inicial com as configuracoes
+#
+[CONFIG]			# configuracoes da depuracao
+NAMFILE=exemplo		# nome do arquivo onde sera impresso a depuracao
+file_level=3		#level maximo em arquivo
+level=2				#level maximo em console
+to_file=1			#falg de controle se deve ou nao gravar em arquivo
+
+#
+# Sessao PARA TESTAR
+#
+[CNTXT1]			# configuracoes da depuracao
+file_level=3		#level maximo em arquivo
+level=2				#level maximo em console
+to_file=1			#falg de controle se deve ou nao gravar em arquivo
