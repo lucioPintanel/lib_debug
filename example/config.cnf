@@ -10,7 +10,7 @@ pretty=0
 filestamp=1 
 
 #
-# Sessao PARA TESTAR
+# Sessao do usuario
 #
 [CNTXT1]			# configuracoes da depuracao
 file_level=3		#level maximo em arquivo
