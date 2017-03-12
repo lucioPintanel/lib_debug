@@ -59,11 +59,11 @@ short td_safe = 1;
 
 /* define the config struct type */
 typedef struct {
-    short file_level;
-    short level;
-    short to_file;
-    short pretty;
-    short filestamp;
+    int file_level;
+    int level;
+    int to_file;
+    int pretty;
+    int filestamp;
 } libDbgFlags_t;
 
 /* Date variables */
@@ -96,6 +96,8 @@ struct libDbgDate_t {
 static pthread_mutex_t lDbgmutex;
 
 libDbgFlags_t libDbgFlags;
+
+Config *gConfig = NULL;
 /**********************************************************************/
 
 /***	SESSION MACROS	***********************************************/
@@ -215,7 +217,7 @@ char* libDbgStrClr(char* clr, char* str, ...)
  * we want to log. Argument fname is log file path and sdate is
  * SlogDate structure variable, we need it to create filename.
  */
-void libDbgToFile(short filestamp, char *out, const char *fname, stLibDbgDate_t *sdate)
+void libDbgToFile(int filestamp, char *out, const char *fname, stLibDbgDate_t *sdate)
 {
     /* Used variables */
     char filename[PATH_MAX];
@@ -281,6 +283,33 @@ int fileExists(const char* path)
     return S_ISREG(tmpStat.st_mode);
 }
 
+/**
+\brief funcao que obtem os valores das flags para saber o que fazer com a informaacao recebida
+*/
+int getConfig(const char *sect, Config *cfg)
+{    
+	int ret = 0;
+    //obtem o level de depuracao em console
+    if (CONFIG_OK != ConfigReadInt(cfg, sect, "level", (int *)&libDbgFlags.level, 0)) {
+    	//printf("libDbgFlags.level: %d\n", libDbgFlags.level);
+    	ret = -1;
+    }
+        
+    //obtem o leve de depuracao em arquivo
+    if (CONFIG_OK != ConfigReadInt(cfg, sect, "file_level", (int *)&libDbgFlags.file_level, 0)) {
+    	//printf("libDbgFlags.file_level: %d\n", libDbgFlags.file_level);
+    	ret = -1;
+    }
+    
+    //obtem o valor que habilita ou nao a depuracao em arquivo
+    if (CONFIG_OK != ConfigReadInt(cfg, sect, "to_file", (int *)&libDbgFlags.to_file, 0)) {
+    	//printf("libDbgFlags.to_file: %d\n", libDbgFlags.to_file);
+    	ret = -1;
+    }
+    
+    return ret;
+}
+
 /*
  * slog - Log exiting process. Function takes arguments and saves
  * log in file if LOGTOFILE flag is enabled from config. Otherwise
@@ -289,6 +318,7 @@ int fileExists(const char* path)
  */
 void libDbg(const char *location, const char* context, int level, int flag, const char *msg, ...)
 {
+
     /* Lock for safe */
     if (td_safe) {
 	if (pthread_mutex_lock(&lDbgmutex)) {
@@ -318,66 +348,77 @@ void libDbg(const char *location, const char* context, int level, int flag, cons
     vsnprintf(string, sizeof (string), msg, args);
     va_end(args);
 
+    /* get configuration de levels */
+    if (0 > getConfig(context, gConfig)) {
+    	printf("\n\t***\tNao foi encontrado a secao passado como parametro.\t***\n" 
+    		"\t\t-->Procurando a secao padrao no arquivo de configuracao\n\n");
+    	if (0 > getConfig("CONFIG", gConfig)) {
+    		printf("\n\t***\tNao foi encontrado a secao PADRAO no arquivo de configuracao\t***\n\n");
+    		return;
+    	}
+    }
+
     /* Check logging levels */
-    if (!level || level <= libDbgFlags.level || level <= libDbgFlags.level) {
-	/* Handle flags */
-	switch (flag)
-	{
-	    case LDBG_LIVE:
-		strncpy(color, libDbgGetColor(_CLR_NORMAL), sizeof (color));
-		strncpy(alarm, "LIVE", sizeof (alarm));
-		break;
-	    case LDBG_INFO:
-		strncpy(color, libDbgGetColor(_CLR_GREEN), sizeof (color));
-		strncpy(alarm, "INFO", sizeof (alarm));
-		break;
-	    case LDBG_WARN:
-		strncpy(color, libDbgGetColor(_CLR_YELLOW), sizeof (color));
-		strncpy(alarm, "WARN", sizeof (alarm));
-		break;
-	    case LDBG_DEBUG:
-		strncpy(color, libDbgGetColor(_CLR_BLUE), sizeof (color));
-		strncpy(alarm, "DEBUG", sizeof (alarm));
-		break;
-	    case LDBG_ERROR:
-		strncpy(color, libDbgGetColor(_CLR_RED), sizeof (color));
-		strncpy(alarm, "ERROR", sizeof (alarm));
-		break;
-	    case LDBG_FATAL:
-		strncpy(color, libDbgGetColor(_CLR_RED), sizeof (color));
-		strncpy(alarm, "FATAL", sizeof (alarm));
-		break;
-	    case LDBG_PANIC:
-		strncpy(color, libDbgGetColor(_CLR_WHITE), sizeof (color));
-		strncpy(alarm, "PANIC", sizeof (alarm));
-		break;
-	    case LDBG_NONE:
-		strncpy(prints, string, sizeof (string));
-		break;
-	    default:
-		strncpy(prints, string, sizeof (string));
-		flag = LDBG_NONE;
-		break;
-	}
+    if((!level) || (level <= libDbgFlags.level) || (level <= libDbgFlags.file_level)) {
+    //if ((0 <= level) && (level <= libDbgFlags.level)) {
+		/* Handle flags */
+		switch (flag)
+		{
+		    case LDBG_LIVE:
+			strncpy(color, libDbgGetColor(_CLR_NORMAL), sizeof (color));
+			strncpy(alarm, "LIVE", sizeof (alarm));
+			break;
+		    case LDBG_INFO:
+			strncpy(color, libDbgGetColor(_CLR_GREEN), sizeof (color));
+			strncpy(alarm, "INFO", sizeof (alarm));
+			break;
+		    case LDBG_WARN:
+			strncpy(color, libDbgGetColor(_CLR_YELLOW), sizeof (color));
+			strncpy(alarm, "WARN", sizeof (alarm));
+			break;
+		    case LDBG_DEBUG:
+			strncpy(color, libDbgGetColor(_CLR_BLUE), sizeof (color));
+			strncpy(alarm, "DEBUG", sizeof (alarm));
+			break;
+		    case LDBG_ERROR:
+			strncpy(color, libDbgGetColor(_CLR_RED), sizeof (color));
+			strncpy(alarm, "ERROR", sizeof (alarm));
+			break;
+		    case LDBG_FATAL:
+			strncpy(color, libDbgGetColor(_CLR_RED), sizeof (color));
+			strncpy(alarm, "FATAL", sizeof (alarm));
+			break;
+		    case LDBG_PANIC:
+			strncpy(color, libDbgGetColor(_CLR_WHITE), sizeof (color));
+			strncpy(alarm, "PANIC", sizeof (alarm));
+			break;
+		    case LDBG_NONE:
+			strncpy(prints, string, sizeof (string));
+			break;
+		    default:
+			strncpy(prints, string, sizeof (string));
+			flag = LDBG_NONE;
+			break;
+		}
 
-	/* Print output */
-	if (level <= libDbgFlags.level || libDbgFlags.pretty) {
-	    if (flag != LDBG_NONE) snprintf(prints, sizeof (prints), "[%s] %s",
-		    libDbgStrClr(color, alarm), string);
-	    if (level <= libDbgFlags.level) printf("[%s] - %s", location, libDbgGet(&mdate, "%s\n", prints));
-	}
+		/* Print output */
+		if (level <= libDbgFlags.level || libDbgFlags.pretty) {
+		    if (flag != LDBG_NONE) snprintf(prints, sizeof (prints), "[%s] %s",
+			    libDbgStrClr(color, alarm), string);
+		    if (level <= libDbgFlags.level) printf("[%s] - %s", location, libDbgGet(&mdate, "%s\n", prints));
+		}
 
-	/* Save log in file */
-	if (libDbgFlags.to_file && level <= libDbgFlags.file_level) {
-	    if (libDbgFlags.pretty) output = libDbgGet(&mdate, "%s\n", prints);
-	    else {
-		if (flag != LDBG_NONE) snprintf(prints, sizeof (prints), "[%s] %s", alarm, string);
-		output = libDbgGet(&mdate, "%s\n", prints);
-	    }
+		/* Save log in file */
+		if(libDbgFlags.to_file && (level <= libDbgFlags.file_level)) {
+		    if (libDbgFlags.pretty) output = libDbgGet(&mdate, "%s\n", prints);
+		    else {
+			if (flag != LDBG_NONE) snprintf(prints, sizeof (prints), "[%s] %s", alarm, string);
+			output = libDbgGet(&mdate, "%s\n", prints);
+		    }
 
-	    /* Add log line to file */
-	    libDbgToFile(libDbgFlags.filestamp, output, gFName, &mdate);
-	}
+		    /* Add log line to file */
+		    libDbgToFile(libDbgFlags.filestamp, output, gFName, &mdate);
+		}
     }
 
     /* Done, unlock mutex */
@@ -395,20 +436,28 @@ int initConfig(Config *cfg)
     char tmpStr[MAXSTR];
     //obtem o nome do arquivo de log a ser gerado
     ConfigReadString(cfg, "CONFIG", "NAMFILE", tmpStr, sizeof (tmpStr), "Poet");
-    printf("NAMFILE: %s\n", tmpStr);
+    //printf("NAMFILE: %s\n", tmpStr);
     strncpy(gFName, tmpStr, sizeof (gFName));
     
     //obtem o level de depuracao em console
-    ConfigReadInt(cfg, "CONFIG", "level", (int *)&libDbgFlags.level, 0);
-    printf("libDbgFlags.level: %d\n", libDbgFlags.level);
+    ConfigReadInt(cfg, "CONFIG", "level", &libDbgFlags.level, 0);
+    //printf("libDbgFlags.level: %d\n", libDbgFlags.level);
     
     //obtem o leve de depuracao em arquivo
-    ConfigReadInt(cfg, "CONFIG", "file_level", (int *)&libDbgFlags.file_level, 0);
-    printf("libDbgFlags.file_level: %d\n", libDbgFlags.file_level);
+    ConfigReadInt(cfg, "CONFIG", "file_level", &libDbgFlags.file_level, 0);
+    //printf("libDbgFlags.file_level: %d\n", libDbgFlags.file_level);
     
     //obtem o valor que habilita ou nao a depuracao em arquivo
-    ConfigReadInt(cfg, "CONFIG", "to_file", (int *)&libDbgFlags.to_file, 0);
-    printf("libDbgFlags.to_file: %d\n", libDbgFlags.to_file);
+    ConfigReadInt(cfg, "CONFIG", "to_file", &libDbgFlags.to_file, 0);
+    //printf("libDbgFlags.to_file: %d\n", libDbgFlags.to_file);
+
+    //obtem o valor que habilita ou nao a depuracao em arquivo
+    ConfigReadInt(cfg, "CONFIG", "pretty", &libDbgFlags.pretty, 0);
+    printf("libDbgFlags.pretty: %d\n", libDbgFlags.pretty);
+
+    //obtem o valor que habilita ou nao a depuracao em arquivo
+    ConfigReadInt(cfg, "CONFIG", "filestamp", &libDbgFlags.filestamp, 0);
+    printf("libDbgFlags.filestamp: %d\n", libDbgFlags.filestamp);
 
     return 0;
 }
@@ -425,22 +474,22 @@ void libDbgInit(const char* fname, const char* conf, int lvl, int flvl, int t_sa
 
     /* Init mutex sync */
     if (t_safe) {
-	/* Init mutex attribute */
-	pthread_mutexattr_t m_attr;
-	if (pthread_mutexattr_init(&m_attr) ||
-		pthread_mutexattr_settype(&m_attr, PTHREAD_MUTEX_RECURSIVE) ||
-		pthread_mutex_init(&lDbgmutex, &m_attr) ||
-		pthread_mutexattr_destroy(&m_attr)) {
-	    printf("<%s:%d> %s: [ERROR] Can not initialize mutex: %d\n",
-		    __FILE__, __LINE__, __FUNCTION__, errno);
-	    td_safe = 0;
-	}
+		/* Init mutex attribute */
+		pthread_mutexattr_t m_attr;
+		if (pthread_mutexattr_init(&m_attr) ||
+			pthread_mutexattr_settype(&m_attr, PTHREAD_MUTEX_RECURSIVE) ||
+			pthread_mutex_init(&lDbgmutex, &m_attr) ||
+			pthread_mutexattr_destroy(&m_attr)) {
+		    printf("<%s:%d> %s: [ERROR] Can not initialize mutex: %d\n",
+			    __FILE__, __LINE__, __FUNCTION__, errno);
+		    td_safe = 0;
+		}
     }
 
-    Config *cfg = NULL;
+    
     /* set settings */
-    cfg = ConfigNew();
-    ConfigSetBoolString(cfg, "yes", "no");
+    gConfig = ConfigNew();
+    ConfigSetBoolString(gConfig, "yes", "no");
 
     if (!fileExists(CONFIGREADFILE)) {
 	printf("Nao existe o arquivo de configuracao - %s\n", CONFIGREADFILE);
@@ -448,17 +497,17 @@ void libDbgInit(const char* fname, const char* conf, int lvl, int flvl, int t_sa
     }
 
     /* we can give initialized handle (rules has been set) */
-    if (ConfigReadFile(conf, &cfg) != CONFIG_OK) {
+    if (ConfigReadFile(conf, &gConfig) != CONFIG_OK) {
 	printf("<%s:%d> %s: [ERROR] ConfigOpenFile failed for %s\n",
 		__FILE__, __LINE__, __FUNCTION__, CONFIGREADFILE);
 	return;
     }
 
-    ConfigPrintSettings(cfg, stdout);
+    ConfigPrintSettings(gConfig, stdout);
 
-    initConfig(cfg);
+    initConfig(gConfig);
 
     /* Handle config parser status */
-    if (!status) libDbg(LOCATION, "context00", 0, LDBG_INFO, "Initializing logger values without config");
-    else libDbg(LOCATION, "context00", 0, LDBG_INFO, "Loading logger config from: %s", conf);
+    if (!status) libDbg(LOCATION, "CONFIG", 0, LDBG_INFO, "Initializing logger values without config");
+    else libDbg(LOCATION, "CONFIG", 0, LDBG_INFO, "Loading logger config from: %s", conf);
 }

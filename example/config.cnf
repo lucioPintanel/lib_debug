@@ -6,6 +6,8 @@ NAMFILE=exemplo		# nome do arquivo onde sera impresso a depuracao
 file_level=3		#level maximo em arquivo
 level=2				#level maximo em console
 to_file=1			#falg de controle se deve ou nao gravar em arquivo
+pretty=0
+filestamp=1 
 
 #
 # Sessao PARA TESTAR
@@ -13,4 +15,9 @@ to_file=1			#falg de controle se deve ou nao gravar em arquivo
 [CNTXT1]			# configuracoes da depuracao
 file_level=3		#level maximo em arquivo
 level=2				#level maximo em console
+to_file=1			#falg de controle se deve ou nao gravar em arquivo
+
+[CNTXT2]			# configuracoes da depuracao
+file_level=1		#level maximo em arquivo
+level=1				#level maximo em console
 to_file=1			#falg de controle se deve ou nao gravar em arquivo
