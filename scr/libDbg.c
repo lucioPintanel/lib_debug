@@ -26,38 +26,72 @@
 /**********************************************************************/
 
 /***	SESSION DEFINE, STRUCT, TYPEDEF	*******************************/
+/*! \def VERSAO_MAX
+	\brief Definicao da versao maxima, esta definicao vem do Makefile.
+*/
 #define VERSAO_MAX _VERSAO_MAX
+/*! \def VERSAO_MIN
+	\brief Definicao da versao minima, esta definicao vem do Makefile.
+*/
 #define VERSAO_MIN _VERSAO_MIN
+/*! \def VERSAO_NRO
+	\brief Definicao da versao numero, esta definicao vem do Makefile.
+*/
 #define VERSAO_NRO _VERSAO_NRO
 
-/* Max size of string */
+/*! \def MAXMSG
+	\brief Max size of string.
+*/
 #define MAXMSG 8196
 
-/* Max size of vetor */
+/*! \def MAXSTR
+	\brief Max size of vetor.
+*/
 #define MAXSTR 256
 
-/* Supported colors */
+/*! \struct colorLen_t libDbg.c
+	\brief Supported colors.
+
+	Esta estrutura eh criada via xmacro 
+*/
 typedef struct {
 #define EXPAND_STRUCT(ENCOLORID, STRCOLOR)   uint8_t ENCOLORID;
     INIT_MESSAGES(EXPAND_STRUCT)
 #undef EXPAND_STRUCT
 } colorLen_t;
 
+/*! \def MESSAGES
+	\brief Tamanho da estrutura colorLen_t
+*/
 #define MESSAGES sizeof(colorLen_t)
 
-/*tabela com as mensagens*/
+/*! \var const colorTable[]
+	\brief Vetor com a string inicializada com as cores e serem utilidas no printf
+
+	Esta estrutura eh criada via xmacro
+*/
 static char const * const colorTable[] = {
 #define EXPAND_STRINGS(ENCOLORID, STRCOLOR)   STRCOLOR,
     INIT_MESSAGES(EXPAND_STRINGS)
 #undef EXPAND_STRINGS
 };
 
+/*!
+	\var gFName[MAXSTR]
+	\brief Vetor para guardar o nome do arquivo onde 
+			vai ser gravado o log se a bibliotaca for configurada para tal
+*/
 char gFName[MAXSTR];
+
+/*!
+	\var td_safe
+	\brief Variavel que controla se a biblioteca eh thread safe
+*/
 short td_safe = 1;
 
-/* Flags */
-
-/* define the config struct type */
+/*! \struct libDbgFlags_t libDbg.c
+	\brief define the config struct type.
+*/
 typedef struct {
     int file_level;
     int level;
@@ -66,7 +100,9 @@ typedef struct {
     int filestamp;
 } libDbgFlags_t;
 
-/* Date variables */
+/*! \struct libDbgDate_t libDbg.c
+	\brief Date variables.
+*/
 struct libDbgDate_t {
     int year;
     int mon;
@@ -77,7 +113,9 @@ struct libDbgDate_t {
     int usec;
 };
 
-/** declare a initialized circular buffer */
+/*! \def LIBDBGDATE_DECLARE(name)
+	\brief declare a initialized estrutura da data/hora
+*/
 #define LIBDBGDATE_DECLARE(name)  \
         stLibDbgDate_t name = {         \
         .year = 0, \
@@ -89,20 +127,39 @@ struct libDbgDate_t {
 	.usec = 0, \
 }
 
+/*! \def CONFIGREADFILE
+	\brief define o nome do arquivo de configuracao da biblioteca
+*/
 #define CONFIGREADFILE  "config.cnf"
 /**********************************************************************/
 
-/***	SESSION VARIAVEIS GLOBAIS	*******************************/
+/***	SESSION VARIAVEIS GLOBAIS	***********************************/
+/*! \var static pthread_mutex_t lDbgmutex
+	\brief declaracao da variavel de controle de lock/unlock da thread
+*/
 static pthread_mutex_t lDbgmutex;
 
+/*! \var libDbgFlags_t libDbgFlags
+	\brief declaracao e inicializacao da estrutura de data/hora
+*/
 libDbgFlags_t libDbgFlags;
 
+/*! \var Config *gConfig
+	\brief declaracao do ponteiro para estrura de controle do parse 
+	dos arquivo .INI
+*/
 Config *gConfig = NULL;
 /**********************************************************************/
 
 /***	SESSION MACROS	***********************************************/
 /* This is a program to measure the improvement of replacing the */
 /* normal strcmp-function with the following macro. */
+
+/*! \def STRICMP(x,y)
+	\brief This is a program to measure the improvement of replacing the
+			normal strcmp-function with the following macro.
+
+*/
 #define STRICMP(x,y) (*(x) == *(y) ? strcmp((x),(y)) : *(x) - *(y))
 
 /**********************************************************************/
@@ -114,20 +171,20 @@ Config *gConfig = NULL;
 /***	SESSION FUNCOES	***********************************************/
 
 /**
- * \brief funcao que informa a cor em funcao do enum
- * _CLR_NORMAL = 0
- * _CLR_RED = 1
- * _CLR_GREEN = 2
- * _CLR_YELLOW = 3
- * _CLR_BLUE = 4
- * _CLR_NAGENTA = 5
- * _CLR_CYAN = 6
- * _CLR_WHITE = 7
+ * \brief funcao que informa a cor em funcao do enum colorID_t
+ * _CLR_NORMAL = 0\n
+ * _CLR_RED = 1\n
+ * _CLR_GREEN = 2\n
+ * _CLR_YELLOW = 3\n
+ * _CLR_BLUE = 4\n
+ * _CLR_NAGENTA = 5\n
+ * _CLR_CYAN = 6\n
+ * _CLR_WHITE = 7\n
  * 
- * \author 
+ * \author Lucio Pintanel
  * \date que foi criado 18/10/16 20:49
- * @param colorId
- * @return 
+ * \param colorId - Index with the position in vector of colorfull
+ * \return lstrColor - String with of color
  */
 char* libDbgGetColor(colorId)
 colorID_t colorId;
@@ -142,9 +199,12 @@ colorID_t colorId;
     return lstrColor;
 }
 
-/*
- * lDbgget_date - Intialize date with system date.
- * Argument is pointer of SlogDate structure.
+/**
+ * \brief Intialize date with system date.
+ * 
+ * \author Lucio Pintanel
+ * \date que foi criado 18/10/16 20:49
+ * \param sdate - pointer of SlogDate structure.
  */
 void libDbgGetDate(stLibDbgDate_t *sdate)
 {
@@ -167,12 +227,17 @@ void libDbgGetDate(stLibDbgDate_t *sdate)
     sdate->usec = now.tv_nsec / 10000000;
 }
 
-/* 
- * Get library version. Function returns version and build number of llogDbg 
+/**
+ * \brief Get library version. Function returns version and build number of llogDbg 
  * library. Return value is char pointer. Argument min is flag for output 
  * format. If min is 1, function returns version in full  format, if flag 
  * is 0 function returns only version numbers, For examle: 1.3.0
--*/
+ * 
+ * \author Lucio Pintanel
+ * \date que foi criado 18/10/16 20:49
+ * \param min - inteiro para solicitar versao simplificado ou detalhada.
+ * \return verstr - string with version of library
+ */
 const char* libDbgVersion(int min)
 {
     static char verstr[128];
@@ -188,11 +253,17 @@ const char* libDbgVersion(int min)
     return verstr;
 }
 
-/*
- * strclr - Colorize string. Function takes color value and string 
+/**
+ * \brief Colorize string. Function takes color value and string 
  * and returns colorized string as char pointer. First argument clr 
  * is color value (if it is invalid, function retunrs NULL) and second 
  * is string with va_list of arguments which one we want to colorize.
+ * 
+ * \author Lucio Pintanel
+ * \date que foi criado 18/10/16 20:49
+ * \param clr - 
+ * \param str - 
+ * \return output - 
  */
 char* libDbgStrClr(char* clr, char* str, ...)
 {
@@ -212,10 +283,17 @@ char* libDbgStrClr(char* clr, char* str, ...)
     return output;
 }
 
-/*
- * log_to_file - Save log in file. Argument aut is string which
+/**
+ * \brief Save log in file. Argument aut is string which
  * we want to log. Argument fname is log file path and sdate is
  * SlogDate structure variable, we need it to create filename.
+ * 
+ * \author Lucio Pintanel
+ * \date que foi criado 18/10/16 20:49
+ * \param filestamp - 
+ * \param out - 
+ * \param fname - 
+ * \param sdate - 
  */
 void libDbgToFile(int filestamp, char *out, const char *fname, stLibDbgDate_t *sdate)
 {
@@ -239,6 +317,14 @@ void libDbgToFile(int filestamp, char *out, const char *fname, stLibDbgDate_t *s
     fclose(fp);
 }
 
+/**
+ * \brief 
+ * 
+ * \author Lucio Pintanel
+ * \date que foi criado 18/10/16 20:49
+ * \param line - 
+ * \return pchFirst - 
+ */
 const char* strToNro(const char* line)
 {
     static char* pchFirst;
@@ -250,10 +336,16 @@ const char* strToNro(const char* line)
     return pchFirst;
 }
 
-/*
- * Retunr string in slog format. Function takes arguments 
+/**
+ * \brief Retunr string in slog format. Function takes arguments 
  * and returns string in slog format without printing and 
  * saveing in file. Return value is char pointer.
+ * 
+ * \author Lucio Pintanel
+ * \date que foi criado 18/10/16 20:49
+ * \param pDate - 
+ * \param msg - 
+ * \return output - 
  */
 char* libDbgGet(stLibDbgDate_t *pDate, char *msg, ...)
 {
@@ -276,6 +368,14 @@ char* libDbgGet(stLibDbgDate_t *pDate, char *msg, ...)
     return output;
 }
 
+/**
+ * \brief 
+ * 
+ * \author Lucio Pintanel
+ * \date que foi criado 18/10/16 20:49
+ * \param path - 
+ * \return S_ISREG - 
+ */
 int fileExists(const char* path)
 {
     struct stat tmpStat;
@@ -284,8 +384,15 @@ int fileExists(const char* path)
 }
 
 /**
-\brief funcao que obtem os valores das flags para saber o que fazer com a informaacao recebida
-*/
+ * \brief funcao que obtem os valores das flags para saber o que 
+ * fazer com a informaacao recebida
+ * 
+ * \author Lucio Pintanel
+ * \date que foi criado 18/10/16 20:49
+ * \param sect - 
+ * \param cfg - 
+ * \return ret - 
+ */
 int getConfig(const char *sect, Config *cfg)
 {    
 	int ret = 0;
@@ -310,11 +417,19 @@ int getConfig(const char *sect, Config *cfg)
     return ret;
 }
 
-/*
- * slog - Log exiting process. Function takes arguments and saves
+/**
+ * \brief Log exiting process. Function takes arguments and saves
  * log in file if LOGTOFILE flag is enabled from config. Otherwise
  * it just prints log without saveing in file. Argument level is
  * logging level and flag is slog flags defined in slog.h header.
+ * 
+ * \author Lucio Pintanel
+ * \date que foi criado 18/10/16 20:49
+ * \param location - 
+ * \param context - 
+ * \param level - 
+ * \param flag - 
+ * \param msg - 
  */
 void libDbg(const char *location, const char* context, int level, int flag, const char *msg, ...)
 {
@@ -431,6 +546,17 @@ void libDbg(const char *location, const char* context, int level, int flag, cons
     }
 }
 
+/**
+ * \brief Log exiting process. Function takes arguments and saves
+ * log in file if LOGTOFILE flag is enabled from config. Otherwise
+ * it just prints log without saveing in file. Argument level is
+ * logging level and flag is slog flags defined in slog.h header.
+ * 
+ * \author Lucio Pintanel
+ * \date que foi criado 18/10/16 20:49
+ * \param cfg - 
+ * \return 
+ */
 int initConfig(Config *cfg)
 {
     char tmpStr[MAXSTR];
@@ -462,11 +588,19 @@ int initConfig(Config *cfg)
     return 0;
 }
 
-/*
- * Initialize slog library. Function parses config file and reads log 
+/**
+ * \brief Initialize slog library. Function parses config file and reads log 
  * level and save to file flag from config. First argument is file name 
  * where log will be saved and second argument conf is config file path 
  * to be parsedand third argument lvl is log level for this message.
+ * 
+ * \author Lucio Pintanel
+ * \date que foi criado 18/10/16 20:49
+ * \param fname - 
+ * \param conf - 
+ * \param lvl - 
+ * \param flvl - 
+ * \param t_safe - 
  */
 void libDbgInit(const char* fname, const char* conf, int lvl, int flvl, int t_safe)
 {

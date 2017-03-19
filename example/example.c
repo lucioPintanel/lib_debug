@@ -9,9 +9,6 @@
 #include <string.h>
 #include "libDbg.h"
 
-extern int teste1();
-extern int teste2();
-
 int greet() 
 {
     /* Get and print slog version */
