@@ -1,0 +1,5 @@
+<map id="libDbgGetColor" name="libDbgGetColor">
+<area shape="rect" id="node2" href="$example_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title="main" alt="" coords="396,31,447,57"/>
+<area shape="rect" id="node3" href="$lib_dbg_8c.html#abba7d8afda76403fcc398aabc77585f9" title="Log exiting process. Function takes arguments and saves log in file if LOGTOFILE flag is enabled from..." alt="" coords="164,31,223,57"/>
+<area shape="rect" id="node4" href="$lib_dbg_8c.html#a73a20deeb90503614ab2fe5f6c40533a" title="Initialize slog library. Function parses config file and reads log level and save to file flag from c..." alt="" coords="271,81,348,108"/>
+</map>

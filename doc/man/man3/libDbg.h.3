@@ -1,0 +1,454 @@
+.TH "/home/lucio/Documentos/desenvolvimento/algoritmo_C/bibliotecas/static/llogDebug/includes/libDbg.h" 3 "Sun Mar 19 2017" "Version 1.0.00" "Library Debug" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+/home/lucio/Documentos/desenvolvimento/algoritmo_C/bibliotecas/static/llogDebug/includes/libDbg.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <pthread\&.h>\fP
+.br
+\fC#include 'ini\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBSTRINGIFY\fP(x)   #x"
+.br
+.ti -1c
+.RI "#define \fBTOSTRING\fP(x)   \fBSTRINGIFY\fP(x)"
+.br
+.ti -1c
+.RI "#define \fBLOCATION\fP   __FILE__ ' : ' \fBTOSTRING\fP(__LINE__)"
+.br
+.ti -1c
+.RI "#define \fBLDBG_NONE\fP   0"
+.br
+.ti -1c
+.RI "#define \fBLDBG_LIVE\fP   1"
+.br
+.ti -1c
+.RI "#define \fBLDBG_INFO\fP   2"
+.br
+.ti -1c
+.RI "#define \fBLDBG_WARN\fP   3"
+.br
+.ti -1c
+.RI "#define \fBLDBG_DEBUG\fP   4"
+.br
+.ti -1c
+.RI "#define \fBLDBG_ERROR\fP   5"
+.br
+.ti -1c
+.RI "#define \fBLDBG_FATAL\fP   6"
+.br
+.ti -1c
+.RI "#define \fBLDBG_PANIC\fP   7"
+.br
+.ti -1c
+.RI "#define \fBINIT_MESSAGES\fP(INIT_MESSAGE)"
+.br
+.ti -1c
+.RI "#define \fBEXPAND_ENUM\fP(ENCOLORID,  STRCOLOR)   ENCOLORID,"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef enum \fB_colorID_t\fP \fBcolorID_t\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBlibDbgFlags_t\fP \fBsrLibDbgFlags_t\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBlibDbgDate_t\fP \fBstLibDbgDate_t\fP"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fB_colorID_t\fP "
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "char * \fBlibDbgGetColor\fP (\fBcolorID_t\fP)"
+.br
+.RI "\fI_CLR_NORMAL = 0 
+.br
+_CLR_RED = 1 
+.br
+_CLR_GREEN = 2 
+.br
+_CLR_YELLOW = 3 
+.br
+_CLR_BLUE = 4 
+.br
+_CLR_NAGENTA = 5 
+.br
+_CLR_CYAN = 6 
+.br
+_CLR_WHITE = 7 
+.br
+\fP"
+.ti -1c
+.RI "const char * \fBlibDbgVersion\fP (int min)"
+.br
+.RI "\fIGet library version\&. Function returns version and build number of llogDbg library\&. Return value is char pointer\&. Argument min is flag for output format\&. If min is 1, function returns version in full format, if flag is 0 function returns only version numbers, For examle: 1\&.3\&.0\&. \fP"
+.ti -1c
+.RI "char * \fBlibDbgStrClr\fP (char *clr, char *str,\&.\&.\&.)"
+.br
+.RI "\fIColorize string\&. Function takes color value and string and returns colorized string as char pointer\&. First argument clr is color value (if it is invalid, function retunrs NULL) and second is string with va_list of arguments which one we want to colorize\&. \fP"
+.ti -1c
+.RI "char * \fBlibDbgGet\fP (\fBstLibDbgDate_t\fP *pDate, char *msg,\&.\&.\&.)"
+.br
+.RI "\fIRetunr string in slog format\&. Function takes arguments and returns string in slog format without printing and saveing in file\&. Return value is char pointer\&. \fP"
+.ti -1c
+.RI "void \fBlibDbg\fP (const char *location, const char *context, int level, int flag, const char *msg,\&.\&.\&.)"
+.br
+.RI "\fILog exiting process\&. Function takes arguments and saves log in file if LOGTOFILE flag is enabled from config\&. Otherwise it just prints log without saveing in file\&. Argument level is logging level and flag is slog flags defined in slog\&.h header\&. \fP"
+.ti -1c
+.RI "void \fBlibDbgInit\fP (const char *fname, const char *conf, int lvl, int flvl, int t_safe)"
+.br
+.RI "\fIInitialize slog library\&. Function parses config file and reads log level and save to file flag from config\&. First argument is file name where log will be saved and second argument conf is config file path to be parsedand third argument lvl is log level for this message\&. \fP"
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define EXPAND_ENUM(ENCOLORID, STRCOLOR)   ENCOLORID,"
+
+.PP
+Definition at line 54 of file libDbg\&.h\&.
+.SS "#define INIT_MESSAGES(INIT_MESSAGE)"
+\fBValue:\fP
+.PP
+.nf
+INIT_MESSAGE(_CLR_NORMAL, "\x1B[0m")\
+INIT_MESSAGE(_CLR_RED, "\x1B[31m")\
+INIT_MESSAGE(_CLR_GREEN, "\x1B[32m")\
+INIT_MESSAGE(_CLR_YELLOW, "\x1B[33m") \
+INIT_MESSAGE(_CLR_BLUE, "\x1B[34m") \
+INIT_MESSAGE(_CLR_NAGENTA, "\x1B[35m") \
+INIT_MESSAGE(_CLR_CYAN, "\x1B[36m") \
+INIT_MESSAGE(_CLR_WHITE, "\x1B[37m") \
+INIT_MESSAGE(_CLR_RESET, "\033[0m")
+.fi
+.PP
+Definition at line 42 of file libDbg\&.h\&.
+.SS "#define LDBG_DEBUG   4"
+
+.PP
+Definition at line 36 of file libDbg\&.h\&.
+.SS "#define LDBG_ERROR   5"
+
+.PP
+Definition at line 37 of file libDbg\&.h\&.
+.SS "#define LDBG_FATAL   6"
+
+.PP
+Definition at line 38 of file libDbg\&.h\&.
+.SS "#define LDBG_INFO   2"
+
+.PP
+Definition at line 34 of file libDbg\&.h\&.
+.SS "#define LDBG_LIVE   1"
+
+.PP
+Definition at line 33 of file libDbg\&.h\&.
+.SS "#define LDBG_NONE   0"
+
+.PP
+Definition at line 32 of file libDbg\&.h\&.
+.SS "#define LDBG_PANIC   7"
+
+.PP
+Definition at line 39 of file libDbg\&.h\&.
+.SS "#define LDBG_WARN   3"
+
+.PP
+Definition at line 35 of file libDbg\&.h\&.
+.SS "#define LOCATION   __FILE__ ' : ' \fBTOSTRING\fP(__LINE__)"
+
+.PP
+Definition at line 29 of file libDbg\&.h\&.
+.SS "#define STRINGIFY(x)   #x"
+
+.PP
+Definition at line 27 of file libDbg\&.h\&.
+.SS "#define TOSTRING(x)   \fBSTRINGIFY\fP(x)"
+
+.PP
+Definition at line 28 of file libDbg\&.h\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef enum \fB_colorID_t\fP \fBcolorID_t\fP"
+
+.PP
+Definition at line 59 of file libDbg\&.h\&.
+.SS "typedef struct \fBlibDbgFlags_t\fP \fBsrLibDbgFlags_t\fP"
+
+.PP
+Definition at line 63 of file libDbg\&.h\&.
+.SS "typedef struct \fBlibDbgDate_t\fP \fBstLibDbgDate_t\fP"
+
+.PP
+Definition at line 65 of file libDbg\&.h\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fB_colorID_t\fP"
+
+.PP
+Definition at line 53 of file libDbg\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "void libDbg (const char * location, const char * context, int level, int flag, const char * msg,  \&.\&.\&.)"
+
+.PP
+Log exiting process\&. Function takes arguments and saves log in file if LOGTOFILE flag is enabled from config\&. Otherwise it just prints log without saveing in file\&. Argument level is logging level and flag is slog flags defined in slog\&.h header\&. 
+.PP
+\fBAuthor:\fP
+.RS 4
+Lucio Pintanel 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+que foi criado 18/10/16 20:49 
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIlocation\fP - 
+.br
+\fIcontext\fP - 
+.br
+\fIlevel\fP - 
+.br
+\fIflag\fP - 
+.br
+\fImsg\fP - 
+.RE
+.PP
+
+.PP
+Definition at line 441 of file libDbg\&.c\&.
+.SS "char* libDbgGet (\fBstLibDbgDate_t\fP * pDate, char * msg,  \&.\&.\&.)"
+
+.PP
+Retunr string in slog format\&. Function takes arguments and returns string in slog format without printing and saveing in file\&. Return value is char pointer\&. 
+.PP
+\fBAuthor:\fP
+.RS 4
+Lucio Pintanel 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+que foi criado 18/10/16 20:49 
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpDate\fP - 
+.br
+\fImsg\fP - 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+output - 
+.RE
+.PP
+
+.PP
+Definition at line 357 of file libDbg\&.c\&.
+.SS "char* libDbgGetColor (\fBcolorID_t\fP colorId)"
+
+.PP
+_CLR_NORMAL = 0 
+.br
+_CLR_RED = 1 
+.br
+_CLR_GREEN = 2 
+.br
+_CLR_YELLOW = 3 
+.br
+_CLR_BLUE = 4 
+.br
+_CLR_NAGENTA = 5 
+.br
+_CLR_CYAN = 6 
+.br
+_CLR_WHITE = 7 
+.br
+
+.PP
+\fBAuthor:\fP
+.RS 4
+
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+que foi criado 18/10/16 20:49 
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcolorId\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+.RE
+.PP
+_CLR_NORMAL = 0 
+.br
+_CLR_RED = 1 
+.br
+_CLR_GREEN = 2 
+.br
+_CLR_YELLOW = 3 
+.br
+_CLR_BLUE = 4 
+.br
+_CLR_NAGENTA = 5 
+.br
+_CLR_CYAN = 6 
+.br
+_CLR_WHITE = 7 
+.br
+ 
+.PP
+\fBAuthor:\fP
+.RS 4
+Lucio Pintanel 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+que foi criado 18/10/16 20:49 
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcolorId\fP - Index with the position in vector of colorfull 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+lstrColor - String with of color 
+.RE
+.PP
+
+.PP
+Definition at line 189 of file libDbg\&.c\&.
+.SS "void libDbgInit (const char * fname, const char * conf, int lvl, int flvl, int t_safe)"
+
+.PP
+Initialize slog library\&. Function parses config file and reads log level and save to file flag from config\&. First argument is file name where log will be saved and second argument conf is config file path to be parsedand third argument lvl is log level for this message\&. 
+.PP
+\fBAuthor:\fP
+.RS 4
+Lucio Pintanel 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+que foi criado 18/10/16 20:49 
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfname\fP - 
+.br
+\fIconf\fP - 
+.br
+\fIlvl\fP - 
+.br
+\fIflvl\fP - 
+.br
+\fIt_safe\fP - 
+.RE
+.PP
+
+.PP
+Definition at line 612 of file libDbg\&.c\&.
+.SS "char* libDbgStrClr (char * clr, char * str,  \&.\&.\&.)"
+
+.PP
+Colorize string\&. Function takes color value and string and returns colorized string as char pointer\&. First argument clr is color value (if it is invalid, function retunrs NULL) and second is string with va_list of arguments which one we want to colorize\&. 
+.PP
+\fBAuthor:\fP
+.RS 4
+Lucio Pintanel 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+que foi criado 18/10/16 20:49 
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIclr\fP - 
+.br
+\fIstr\fP - 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+output - 
+.RE
+.PP
+
+.PP
+Definition at line 275 of file libDbg\&.c\&.
+.SS "const char* libDbgVersion (int min)"
+
+.PP
+Get library version\&. Function returns version and build number of llogDbg library\&. Return value is char pointer\&. Argument min is flag for output format\&. If min is 1, function returns version in full format, if flag is 0 function returns only version numbers, For examle: 1\&.3\&.0\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fImin\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+verstr 
+.RE
+.PP
+\fBAuthor:\fP
+.RS 4
+Lucio Pintanel 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+que foi criado 18/10/16 20:49 
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fImin\fP - inteiro para solicitar versao simplificado ou detalhada\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+verstr - string with version of library 
+.RE
+.PP
+
+.PP
+Definition at line 248 of file libDbg\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Library Debug from the source code\&.

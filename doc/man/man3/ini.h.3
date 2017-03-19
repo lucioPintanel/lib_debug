@@ -1,0 +1,242 @@
+.TH "/home/lucio/Documentos/desenvolvimento/algoritmo_C/bibliotecas/static/llogDebug/includes/ini.h" 3 "Sun Mar 19 2017" "Version 1.0.00" "Library Debug" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+/home/lucio/Documentos/desenvolvimento/algoritmo_C/bibliotecas/static/llogDebug/includes/ini.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBfalse\fP   0"
+.br
+.ti -1c
+.RI "#define \fBtrue\fP   (!\fBfalse\fP)"
+.br
+.ti -1c
+.RI "#define \fBCONFIG_SECTION_FLAT\fP   NULL	/* config is flat data (has no section) */"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef unsigned char \fBbool\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBConfig\fP \fBConfig\fP"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBConfigRet\fP { \fBCONFIG_OK\fP, \fBCONFIG_ERR_FILE\fP, \fBCONFIG_ERR_NO_SECTION\fP, \fBCONFIG_ERR_NO_KEY\fP, \fBCONFIG_ERR_MEMALLOC\fP, \fBCONFIG_ERR_INVALID_PARAM\fP, \fBCONFIG_ERR_INVALID_VALUE\fP, \fBCONFIG_ERR_PARSING\fP }
+.RI "\fIReturn types\&. \fP""
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBConfig\fP * \fBConfigNew\fP (void)"
+.br
+.ti -1c
+.RI "void \fBConfigFree\fP (\fBConfig\fP *cfg)"
+.br
+.ti -1c
+.RI "const char * \fBConfigRetToString\fP (\fBConfigRet\fP ret)"
+.br
+.ti -1c
+.RI "\fBConfigRet\fP \fBConfigRead\fP (FILE *fp, \fBConfig\fP **cfg)"
+.br
+.ti -1c
+.RI "\fBConfigRet\fP \fBConfigReadFile\fP (const char *filename, \fBConfig\fP **cfg)"
+.br
+.ti -1c
+.RI "\fBConfigRet\fP \fBConfigPrint\fP (const \fBConfig\fP *cfg, FILE *stream)"
+.br
+.ti -1c
+.RI "\fBConfigRet\fP \fBConfigPrintToFile\fP (const \fBConfig\fP *cfg, char *filename)"
+.br
+.ti -1c
+.RI "\fBConfigRet\fP \fBConfigPrintSettings\fP (const \fBConfig\fP *cfg, FILE *stream)"
+.br
+.ti -1c
+.RI "int \fBConfigGetSectionCount\fP (const \fBConfig\fP *cfg)"
+.br
+.ti -1c
+.RI "int \fBConfigGetKeyCount\fP (const \fBConfig\fP *cfg, const char *sect)"
+.br
+.ti -1c
+.RI "\fBConfigRet\fP \fBConfigSetCommentCharset\fP (\fBConfig\fP *cfg, const char *comment_ch)"
+.br
+.ti -1c
+.RI "\fBConfigRet\fP \fBConfigSetKeyValSepChar\fP (\fBConfig\fP *cfg, char ch)"
+.br
+.ti -1c
+.RI "\fBConfigRet\fP \fBConfigSetBoolString\fP (\fBConfig\fP *cfg, const char *true_str, const char *false_str)"
+.br
+.ti -1c
+.RI "\fBConfigRet\fP \fBConfigReadString\fP (const \fBConfig\fP *cfg, const char *sect, const char *key, char *val, int size, const char *dfl_val)"
+.br
+.ti -1c
+.RI "\fBConfigRet\fP \fBConfigReadInt\fP (const \fBConfig\fP *cfg, const char *sect, const char *key, int *val, int dfl_val)"
+.br
+.ti -1c
+.RI "\fBConfigRet\fP \fBConfigReadUnsignedInt\fP (const \fBConfig\fP *cfg, const char *sect, const char *key, unsigned int *val, unsigned int dfl_val)"
+.br
+.ti -1c
+.RI "\fBConfigRet\fP \fBConfigReadFloat\fP (const \fBConfig\fP *cfg, const char *sect, const char *key, float *val, float dfl_val)"
+.br
+.ti -1c
+.RI "\fBConfigRet\fP \fBConfigReadDouble\fP (const \fBConfig\fP *cfg, const char *sect, const char *key, double *val, double dfl_val)"
+.br
+.ti -1c
+.RI "\fBConfigRet\fP \fBConfigReadBool\fP (const \fBConfig\fP *cfg, const char *sect, const char *key, \fBbool\fP *val, \fBbool\fP dfl_val)"
+.br
+.ti -1c
+.RI "\fBConfigRet\fP \fBConfigAddString\fP (\fBConfig\fP *cfg, const char *sect, const char *key, const char *val)"
+.br
+.ti -1c
+.RI "\fBConfigRet\fP \fBConfigAddInt\fP (\fBConfig\fP *cfg, const char *sect, const char *key, int val)"
+.br
+.ti -1c
+.RI "\fBConfigRet\fP \fBConfigAddUnsignedInt\fP (\fBConfig\fP *cfg, const char *sect, const char *key, unsigned int val)"
+.br
+.ti -1c
+.RI "\fBConfigRet\fP \fBConfigAddFloat\fP (\fBConfig\fP *cfg, const char *sect, const char *key, float val)"
+.br
+.ti -1c
+.RI "\fBConfigRet\fP \fBConfigAddDouble\fP (\fBConfig\fP *cfg, const char *sect, const char *key, double val)"
+.br
+.ti -1c
+.RI "\fBConfigRet\fP \fBConfigAddBool\fP (\fBConfig\fP *cfg, const char *sect, const char *key, \fBbool\fP val)"
+.br
+.ti -1c
+.RI "\fBbool\fP \fBConfigHasSection\fP (const \fBConfig\fP *cfg, const char *sect)"
+.br
+.ti -1c
+.RI "\fBConfigRet\fP \fBConfigRemoveSection\fP (\fBConfig\fP *cfg, const char *sect)"
+.br
+.ti -1c
+.RI "\fBConfigRet\fP \fBConfigRemoveKey\fP (\fBConfig\fP *cfg, const char *sect, const char *key)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define CONFIG_SECTION_FLAT   NULL	/* config is flat data (has no section) */"
+
+.PP
+Definition at line 29 of file ini\&.h\&.
+.SS "#define false   0"
+
+.PP
+Definition at line 19 of file ini\&.h\&.
+.SS "#define true   (!\fBfalse\fP)"
+
+.PP
+Definition at line 21 of file ini\&.h\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef unsigned char \fBbool\fP"
+
+.PP
+Definition at line 17 of file ini\&.h\&.
+.SS "typedef struct \fBConfig\fP \fBConfig\fP"
+
+.PP
+Definition at line 26 of file ini\&.h\&.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBConfigRet\fP"
+
+.PP
+Return types\&. 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fICONFIG_OK \fP\fP
+.TP
+\fB\fICONFIG_ERR_FILE \fP\fP
+.TP
+\fB\fICONFIG_ERR_NO_SECTION \fP\fP
+.TP
+\fB\fICONFIG_ERR_NO_KEY \fP\fP
+.TP
+\fB\fICONFIG_ERR_MEMALLOC \fP\fP
+.TP
+\fB\fICONFIG_ERR_INVALID_PARAM \fP\fP
+.TP
+\fB\fICONFIG_ERR_INVALID_VALUE \fP\fP
+.TP
+\fB\fICONFIG_ERR_PARSING \fP\fP
+.PP
+Definition at line 35 of file ini\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "\fBConfigRet\fP ConfigAddBool (\fBConfig\fP * cfg, const char * sect, const char * key, \fBbool\fP val)"
+
+.SS "\fBConfigRet\fP ConfigAddDouble (\fBConfig\fP * cfg, const char * sect, const char * key, double val)"
+
+.SS "\fBConfigRet\fP ConfigAddFloat (\fBConfig\fP * cfg, const char * sect, const char * key, float val)"
+
+.SS "\fBConfigRet\fP ConfigAddInt (\fBConfig\fP * cfg, const char * sect, const char * key, int val)"
+
+.SS "\fBConfigRet\fP ConfigAddString (\fBConfig\fP * cfg, const char * sect, const char * key, const char * val)"
+
+.SS "\fBConfigRet\fP ConfigAddUnsignedInt (\fBConfig\fP * cfg, const char * sect, const char * key, unsigned int val)"
+
+.SS "void ConfigFree (\fBConfig\fP * cfg)"
+
+.SS "int ConfigGetKeyCount (const \fBConfig\fP * cfg, const char * sect)"
+
+.SS "int ConfigGetSectionCount (const \fBConfig\fP * cfg)"
+
+.SS "\fBbool\fP ConfigHasSection (const \fBConfig\fP * cfg, const char * sect)"
+
+.SS "\fBConfig\fP* ConfigNew (void)"
+
+.SS "\fBConfigRet\fP ConfigPrint (const \fBConfig\fP * cfg, FILE * stream)"
+
+.SS "\fBConfigRet\fP ConfigPrintSettings (const \fBConfig\fP * cfg, FILE * stream)"
+
+.SS "\fBConfigRet\fP ConfigPrintToFile (const \fBConfig\fP * cfg, char * filename)"
+
+.SS "\fBConfigRet\fP ConfigRead (FILE * fp, \fBConfig\fP ** cfg)"
+
+.SS "\fBConfigRet\fP ConfigReadBool (const \fBConfig\fP * cfg, const char * sect, const char * key, \fBbool\fP * val, \fBbool\fP dfl_val)"
+
+.SS "\fBConfigRet\fP ConfigReadDouble (const \fBConfig\fP * cfg, const char * sect, const char * key, double * val, double dfl_val)"
+
+.SS "\fBConfigRet\fP ConfigReadFile (const char * filename, \fBConfig\fP ** cfg)"
+
+.SS "\fBConfigRet\fP ConfigReadFloat (const \fBConfig\fP * cfg, const char * sect, const char * key, float * val, float dfl_val)"
+
+.SS "\fBConfigRet\fP ConfigReadInt (const \fBConfig\fP * cfg, const char * sect, const char * key, int * val, int dfl_val)"
+
+.SS "\fBConfigRet\fP ConfigReadString (const \fBConfig\fP * cfg, const char * sect, const char * key, char * val, int size, const char * dfl_val)"
+
+.SS "\fBConfigRet\fP ConfigReadUnsignedInt (const \fBConfig\fP * cfg, const char * sect, const char * key, unsigned int * val, unsigned int dfl_val)"
+
+.SS "\fBConfigRet\fP ConfigRemoveKey (\fBConfig\fP * cfg, const char * sect, const char * key)"
+
+.SS "\fBConfigRet\fP ConfigRemoveSection (\fBConfig\fP * cfg, const char * sect)"
+
+.SS "const char* ConfigRetToString (\fBConfigRet\fP ret)"
+
+.SS "\fBConfigRet\fP ConfigSetBoolString (\fBConfig\fP * cfg, const char * true_str, const char * false_str)"
+
+.SS "\fBConfigRet\fP ConfigSetCommentCharset (\fBConfig\fP * cfg, const char * comment_ch)"
+
+.SS "\fBConfigRet\fP ConfigSetKeyValSepChar (\fBConfig\fP * cfg, char ch)"
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Library Debug from the source code\&.

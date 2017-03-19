@@ -1,0 +1,669 @@
+.TH "/home/lucio/Documentos/desenvolvimento/algoritmo_C/bibliotecas/static/llogDebug/scr/libDbg.c" 3 "Sun Mar 19 2017" "Version 1.0.00" "Library Debug" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+/home/lucio/Documentos/desenvolvimento/algoritmo_C/bibliotecas/static/llogDebug/scr/libDbg.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <pthread\&.h>\fP
+.br
+\fC#include <stdarg\&.h>\fP
+.br
+\fC#include <limits\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+\fC#include <time\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <sys/types\&.h>\fP
+.br
+\fC#include <sys/stat\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include 'libDbg\&.h'\fP
+.br
+
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "struct \fBcolorLen_t\fP"
+.br
+.RI "\fISupported colors\&. \fP"
+.ti -1c
+.RI "struct \fBlibDbgFlags_t\fP"
+.br
+.RI "\fIdefine the config struct type\&. \fP"
+.ti -1c
+.RI "struct \fBlibDbgDate_t\fP"
+.br
+.RI "\fIDate variables\&. \fP"
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBVERSAO_MAX\fP   _VERSAO_MAX"
+.br
+.RI "\fIDefinicao da versao maxima, esta definicao vem do Makefile\&. \fP"
+.ti -1c
+.RI "#define \fBVERSAO_MIN\fP   _VERSAO_MIN"
+.br
+.RI "\fIDefinicao da versao minima, esta definicao vem do Makefile\&. \fP"
+.ti -1c
+.RI "#define \fBVERSAO_NRO\fP   _VERSAO_NRO"
+.br
+.RI "\fIDefinicao da versao numero, esta definicao vem do Makefile\&. \fP"
+.ti -1c
+.RI "#define \fBMAXMSG\fP   8196"
+.br
+.RI "\fIMax size of string\&. \fP"
+.ti -1c
+.RI "#define \fBMAXSTR\fP   256"
+.br
+.RI "\fIMax size of vetor\&. \fP"
+.ti -1c
+.RI "#define \fBEXPAND_STRUCT\fP(ENCOLORID,  STRCOLOR)   uint8_t ENCOLORID;"
+.br
+.ti -1c
+.RI "#define \fBMESSAGES\fP   sizeof(\fBcolorLen_t\fP)"
+.br
+.RI "\fITamanho da estrutura \fBcolorLen_t\fP\&. \fP"
+.ti -1c
+.RI "#define \fBEXPAND_STRINGS\fP(ENCOLORID,  STRCOLOR)   STRCOLOR,"
+.br
+.ti -1c
+.RI "#define \fBLIBDBGDATE_DECLARE\fP(name)"
+.br
+.RI "\fIdeclare a initialized estrutura da data/hora \fP"
+.ti -1c
+.RI "#define \fBCONFIGREADFILE\fP   'config\&.cnf'"
+.br
+.RI "\fIdefine o nome do arquivo de configuracao da biblioteca \fP"
+.ti -1c
+.RI "#define \fBSTRICMP\fP(x,  y)   (*(x) == *(y) ? strcmp((x),(y)) : *(x) \- *(y))"
+.br
+.RI "\fIThis is a program to measure the improvement of replacing the normal strcmp-function with the following macro\&. \fP"
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "char * \fBlibDbgGetColor\fP (\fBcolorID_t\fP colorId)"
+.br
+.RI "\fIfuncao que informa a cor em funcao do enum colorID_t  = 0
+.br
+_CLR_RED = 1
+.br
+_CLR_GREEN = 2
+.br
+_CLR_YELLOW = 3
+.br
+_CLR_BLUE = 4
+.br
+_CLR_NAGENTA = 5
+.br
+_CLR_CYAN = 6
+.br
+_CLR_WHITE = 7
+.br
+\fP"
+.ti -1c
+.RI "void \fBlibDbgGetDate\fP (\fBstLibDbgDate_t\fP *sdate)"
+.br
+.RI "\fIIntialize date with system date\&. \fP"
+.ti -1c
+.RI "const char * \fBlibDbgVersion\fP (int min)"
+.br
+.RI "\fIGet library version\&. Function returns version and build number of llogDbg library\&. Return value is char pointer\&. Argument min is flag for output format\&. If min is 1, function returns version in full format, if flag is 0 function returns only version numbers, For examle: 1\&.3\&.0\&. \fP"
+.ti -1c
+.RI "char * \fBlibDbgStrClr\fP (char *clr, char *str,\&.\&.\&.)"
+.br
+.RI "\fIColorize string\&. Function takes color value and string and returns colorized string as char pointer\&. First argument clr is color value (if it is invalid, function retunrs NULL) and second is string with va_list of arguments which one we want to colorize\&. \fP"
+.ti -1c
+.RI "void \fBlibDbgToFile\fP (int filestamp, char *out, const char *fname, \fBstLibDbgDate_t\fP *sdate)"
+.br
+.RI "\fISave log in file\&. Argument aut is string which we want to log\&. Argument fname is log file path and sdate is SlogDate structure variable, we need it to create filename\&. \fP"
+.ti -1c
+.RI "const char * \fBstrToNro\fP (const char *line)"
+.br
+.ti -1c
+.RI "char * \fBlibDbgGet\fP (\fBstLibDbgDate_t\fP *pDate, char *msg,\&.\&.\&.)"
+.br
+.RI "\fIRetunr string in slog format\&. Function takes arguments and returns string in slog format without printing and saveing in file\&. Return value is char pointer\&. \fP"
+.ti -1c
+.RI "int \fBfileExists\fP (const char *path)"
+.br
+.ti -1c
+.RI "int \fBgetConfig\fP (const char *sect, \fBConfig\fP *cfg)"
+.br
+.RI "\fIfuncao que obtem os valores das flags para saber o que fazer com a informaacao recebida \fP"
+.ti -1c
+.RI "void \fBlibDbg\fP (const char *location, const char *context, int level, int flag, const char *msg,\&.\&.\&.)"
+.br
+.RI "\fILog exiting process\&. Function takes arguments and saves log in file if LOGTOFILE flag is enabled from config\&. Otherwise it just prints log without saveing in file\&. Argument level is logging level and flag is slog flags defined in slog\&.h header\&. \fP"
+.ti -1c
+.RI "int \fBinitConfig\fP (\fBConfig\fP *cfg)"
+.br
+.RI "\fILog exiting process\&. Function takes arguments and saves log in file if LOGTOFILE flag is enabled from config\&. Otherwise it just prints log without saveing in file\&. Argument level is logging level and flag is slog flags defined in slog\&.h header\&. \fP"
+.ti -1c
+.RI "void \fBlibDbgInit\fP (const char *fname, const char *conf, int lvl, int flvl, int t_safe)"
+.br
+.RI "\fIInitialize slog library\&. Function parses config file and reads log level and save to file flag from config\&. First argument is file name where log will be saved and second argument conf is config file path to be parsedand third argument lvl is log level for this message\&. \fP"
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "char \fBgFName\fP [\fBMAXSTR\fP]"
+.br
+.RI "\fIVetor para guardar o nome do arquivo onde vai ser gravado o log se a bibliotaca for configurada para tal\&. \fP"
+.ti -1c
+.RI "short \fBtd_safe\fP = 1"
+.br
+.RI "\fIVariavel que controla se a biblioteca eh thread safe\&. \fP"
+.ti -1c
+.RI "\fBlibDbgFlags_t\fP \fBlibDbgFlags\fP"
+.br
+.RI "\fIdeclaracao e inicializacao da estrutura de data/hora \fP"
+.ti -1c
+.RI "\fBConfig\fP * \fBgConfig\fP = NULL"
+.br
+.RI "\fIdeclaracao do ponteiro para estrura de controle do parse dos arquivo \&.INI \fP"
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define CONFIGREADFILE   'config\&.cnf'"
+
+.PP
+define o nome do arquivo de configuracao da biblioteca 
+.PP
+Definition at line 133 of file libDbg\&.c\&.
+.SS "#define EXPAND_STRINGS(ENCOLORID, STRCOLOR)   STRCOLOR,"
+
+.SS "#define EXPAND_STRUCT(ENCOLORID, STRCOLOR)   uint8_t ENCOLORID;"
+
+.PP
+Definition at line 58 of file libDbg\&.c\&.
+.SS "#define LIBDBGDATE_DECLARE(name)"
+\fBValue:\fP
+.PP
+.nf
+stLibDbgDate_t name = {         \
+        \&.year = 0, \
+    \&.mon = 0, \
+    \&.day = 0, \
+    \&.hour = 0, \
+    \&.min = 0, \
+    \&.sec = 0, \
+    \&.usec = 0, \
+}
+.fi
+.PP
+declare a initialized estrutura da data/hora 
+.PP
+Definition at line 119 of file libDbg\&.c\&.
+.SS "#define MAXMSG   8196"
+
+.PP
+Max size of string\&. 
+.PP
+Definition at line 45 of file libDbg\&.c\&.
+.SS "#define MAXSTR   256"
+
+.PP
+Max size of vetor\&. 
+.PP
+Definition at line 50 of file libDbg\&.c\&.
+.SS "#define MESSAGES   sizeof(\fBcolorLen_t\fP)"
+
+.PP
+Tamanho da estrutura \fBcolorLen_t\fP\&. 
+.PP
+Definition at line 66 of file libDbg\&.c\&.
+.SS "#define STRICMP(x, y)   (*(x) == *(y) ? strcmp((x),(y)) : *(x) \- *(y))"
+
+.PP
+This is a program to measure the improvement of replacing the normal strcmp-function with the following macro\&. 
+.PP
+Definition at line 163 of file libDbg\&.c\&.
+.SS "#define VERSAO_MAX   _VERSAO_MAX"
+
+.PP
+Definicao da versao maxima, esta definicao vem do Makefile\&. 
+.PP
+Definition at line 32 of file libDbg\&.c\&.
+.SS "#define VERSAO_MIN   _VERSAO_MIN"
+
+.PP
+Definicao da versao minima, esta definicao vem do Makefile\&. 
+.PP
+Definition at line 36 of file libDbg\&.c\&.
+.SS "#define VERSAO_NRO   _VERSAO_NRO"
+
+.PP
+Definicao da versao numero, esta definicao vem do Makefile\&. 
+.PP
+Definition at line 40 of file libDbg\&.c\&.
+.SH "Function Documentation"
+.PP 
+.SS "int fileExists (const char * path)"
+
+.PP
+\fBAuthor:\fP
+.RS 4
+Lucio Pintanel 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+que foi criado 18/10/16 20:49 
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpath\fP - 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+S_ISREG - 
+.RE
+.PP
+
+.PP
+Definition at line 386 of file libDbg\&.c\&.
+.SS "int getConfig (const char * sect, \fBConfig\fP * cfg)"
+
+.PP
+funcao que obtem os valores das flags para saber o que fazer com a informaacao recebida 
+.PP
+\fBAuthor:\fP
+.RS 4
+Lucio Pintanel 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+que foi criado 18/10/16 20:49 
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsect\fP - 
+.br
+\fIcfg\fP - 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+ret - 
+.RE
+.PP
+
+.PP
+Definition at line 403 of file libDbg\&.c\&.
+.SS "int initConfig (\fBConfig\fP * cfg)"
+
+.PP
+Log exiting process\&. Function takes arguments and saves log in file if LOGTOFILE flag is enabled from config\&. Otherwise it just prints log without saveing in file\&. Argument level is logging level and flag is slog flags defined in slog\&.h header\&. 
+.PP
+\fBAuthor:\fP
+.RS 4
+Lucio Pintanel 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+que foi criado 18/10/16 20:49 
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcfg\fP - 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+.RE
+.PP
+
+.PP
+Definition at line 567 of file libDbg\&.c\&.
+.SS "void libDbg (const char * location, const char * context, int level, int flag, const char * msg,  \&.\&.\&.)"
+
+.PP
+Log exiting process\&. Function takes arguments and saves log in file if LOGTOFILE flag is enabled from config\&. Otherwise it just prints log without saveing in file\&. Argument level is logging level and flag is slog flags defined in slog\&.h header\&. 
+.PP
+\fBAuthor:\fP
+.RS 4
+Lucio Pintanel 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+que foi criado 18/10/16 20:49 
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIlocation\fP - 
+.br
+\fIcontext\fP - 
+.br
+\fIlevel\fP - 
+.br
+\fIflag\fP - 
+.br
+\fImsg\fP - 
+.RE
+.PP
+
+.PP
+Definition at line 441 of file libDbg\&.c\&.
+.SS "char* libDbgGet (\fBstLibDbgDate_t\fP * pDate, char * msg,  \&.\&.\&.)"
+
+.PP
+Retunr string in slog format\&. Function takes arguments and returns string in slog format without printing and saveing in file\&. Return value is char pointer\&. 
+.PP
+\fBAuthor:\fP
+.RS 4
+Lucio Pintanel 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+que foi criado 18/10/16 20:49 
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpDate\fP - 
+.br
+\fImsg\fP - 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+output - 
+.RE
+.PP
+
+.PP
+Definition at line 357 of file libDbg\&.c\&.
+.SS "char* libDbgGetColor (\fBcolorID_t\fP colorId)"
+
+.PP
+funcao que informa a cor em funcao do enum colorID_t  = 0
+.br
+_CLR_RED = 1
+.br
+_CLR_GREEN = 2
+.br
+_CLR_YELLOW = 3
+.br
+_CLR_BLUE = 4
+.br
+_CLR_NAGENTA = 5
+.br
+_CLR_CYAN = 6
+.br
+_CLR_WHITE = 7
+.br
+_CLR_NORMAL = 0 
+.br
+_CLR_RED = 1 
+.br
+_CLR_GREEN = 2 
+.br
+_CLR_YELLOW = 3 
+.br
+_CLR_BLUE = 4 
+.br
+_CLR_NAGENTA = 5 
+.br
+_CLR_CYAN = 6 
+.br
+_CLR_WHITE = 7 
+.br
+ 
+.PP
+\fBAuthor:\fP
+.RS 4
+Lucio Pintanel 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+que foi criado 18/10/16 20:49 
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcolorId\fP - Index with the position in vector of colorfull 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+lstrColor - String with of color 
+.RE
+.PP
+
+.PP
+Definition at line 189 of file libDbg\&.c\&.
+.SS "void libDbgGetDate (\fBstLibDbgDate_t\fP * sdate)"
+
+.PP
+Intialize date with system date\&. 
+.PP
+\fBAuthor:\fP
+.RS 4
+Lucio Pintanel 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+que foi criado 18/10/16 20:49 
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsdate\fP - pointer of SlogDate structure\&. 
+.RE
+.PP
+
+.PP
+Definition at line 209 of file libDbg\&.c\&.
+.SS "void libDbgInit (const char * fname, const char * conf, int lvl, int flvl, int t_safe)"
+
+.PP
+Initialize slog library\&. Function parses config file and reads log level and save to file flag from config\&. First argument is file name where log will be saved and second argument conf is config file path to be parsedand third argument lvl is log level for this message\&. 
+.PP
+\fBAuthor:\fP
+.RS 4
+Lucio Pintanel 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+que foi criado 18/10/16 20:49 
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfname\fP - 
+.br
+\fIconf\fP - 
+.br
+\fIlvl\fP - 
+.br
+\fIflvl\fP - 
+.br
+\fIt_safe\fP - 
+.RE
+.PP
+
+.PP
+Definition at line 612 of file libDbg\&.c\&.
+.SS "char* libDbgStrClr (char * clr, char * str,  \&.\&.\&.)"
+
+.PP
+Colorize string\&. Function takes color value and string and returns colorized string as char pointer\&. First argument clr is color value (if it is invalid, function retunrs NULL) and second is string with va_list of arguments which one we want to colorize\&. 
+.PP
+\fBAuthor:\fP
+.RS 4
+Lucio Pintanel 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+que foi criado 18/10/16 20:49 
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIclr\fP - 
+.br
+\fIstr\fP - 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+output - 
+.RE
+.PP
+
+.PP
+Definition at line 275 of file libDbg\&.c\&.
+.SS "void libDbgToFile (int filestamp, char * out, const char * fname, \fBstLibDbgDate_t\fP * sdate)"
+
+.PP
+Save log in file\&. Argument aut is string which we want to log\&. Argument fname is log file path and sdate is SlogDate structure variable, we need it to create filename\&. 
+.PP
+\fBAuthor:\fP
+.RS 4
+Lucio Pintanel 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+que foi criado 18/10/16 20:49 
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfilestamp\fP - 
+.br
+\fIout\fP - 
+.br
+\fIfname\fP - 
+.br
+\fIsdate\fP - 
+.RE
+.PP
+
+.PP
+Definition at line 305 of file libDbg\&.c\&.
+.SS "const char* libDbgVersion (int min)"
+
+.PP
+Get library version\&. Function returns version and build number of llogDbg library\&. Return value is char pointer\&. Argument min is flag for output format\&. If min is 1, function returns version in full format, if flag is 0 function returns only version numbers, For examle: 1\&.3\&.0\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fImin\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+verstr 
+.RE
+.PP
+\fBAuthor:\fP
+.RS 4
+Lucio Pintanel 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+que foi criado 18/10/16 20:49 
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fImin\fP - inteiro para solicitar versao simplificado ou detalhada\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+verstr - string with version of library 
+.RE
+.PP
+
+.PP
+Definition at line 248 of file libDbg\&.c\&.
+.SS "const char* strToNro (const char * line)"
+
+.PP
+\fBAuthor:\fP
+.RS 4
+Lucio Pintanel 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+que foi criado 18/10/16 20:49 
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIline\fP - 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+pchFirst - 
+.RE
+.PP
+
+.PP
+Definition at line 335 of file libDbg\&.c\&.
+.SH "Variable Documentation"
+.PP 
+.SS "\fBConfig\fP * gConfig = NULL"
+
+.PP
+declaracao do ponteiro para estrura de controle do parse dos arquivo \&.INI 
+.PP
+Definition at line 151 of file libDbg\&.c\&.
+.SS "gFName[\fBMAXSTR\fP]"
+
+.PP
+Vetor para guardar o nome do arquivo onde vai ser gravado o log se a bibliotaca for configurada para tal\&. 
+.PP
+Definition at line 84 of file libDbg\&.c\&.
+.SS "\fBlibDbgFlags_t\fP libDbgFlags"
+
+.PP
+declaracao e inicializacao da estrutura de data/hora 
+.PP
+Definition at line 145 of file libDbg\&.c\&.
+.SS "td_safe = 1"
+
+.PP
+Variavel que controla se a biblioteca eh thread safe\&. 
+.PP
+Definition at line 90 of file libDbg\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Library Debug from the source code\&.

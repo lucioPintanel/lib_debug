@@ -1,0 +1,9 @@
+<map id="libDbg" name="libDbg">
+<area shape="rect" id="node2" href="$lib_dbg_8c.html#a2a216838cd4939713fb6044862315725" title="Intialize date with system date. " alt="" coords="113,5,221,32"/>
+<area shape="rect" id="node3" href="$lib_dbg_8c.html#a1e2d459d186bf9405225ded1ad9d9a9f" title="funcao que obtem os valores das flags para saber o que fazer com a informaacao recebida ..." alt="" coords="128,56,207,83"/>
+<area shape="rect" id="node5" href="$lib_dbg_8c.html#a1374ec78f461bf9a568ccd9f1d8e66db" title="funcao que informa a cor em funcao do enum colorID_t &#160;= 0 _CLR_RED = 1 _CLR_GREEN = 2 _CLR_YELLOW = 3..." alt="" coords="112,107,223,133"/>
+<area shape="rect" id="node6" href="$lib_dbg_8c.html#a19f47a776469a54355e93ec584826e7e" title="Colorize string. Function takes color value and string and returns colorized string as char pointer..." alt="" coords="121,157,214,184"/>
+<area shape="rect" id="node7" href="$lib_dbg_8c.html#a2d61f6d479c3536a39f1cd22290c9539" title="Retunr string in slog format. Function takes arguments and returns string in slog format without prin..." alt="" coords="127,208,207,235"/>
+<area shape="rect" id="node8" href="$lib_dbg_8c.html#a6f7be09899d3b3795c19556cb1b414fc" title="Save log in file. Argument aut is string which we want to log. Argument fname is log file path and sd..." alt="" coords="120,259,215,285"/>
+<area shape="rect" id="node4" href="$ini_8h.html#a44a61a65a7be235445b739bee508b424" title="ConfigReadInt" alt="" coords="271,56,377,83"/>
+</map>

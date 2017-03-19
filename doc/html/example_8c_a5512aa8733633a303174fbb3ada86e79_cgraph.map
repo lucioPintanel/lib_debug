@@ -1,0 +1,3 @@
+<map id="greet" name="greet">
+<area shape="rect" id="node2" href="$lib_dbg_8h.html#a8ef083e3952ccbb7a60449116e17e41e" title="Get library version. Function returns version and build number of llogDbg library. Return value is char pointer. Argument min is flag for output format. If min is 1, function returns version in full format, if flag is 0 function returns only version numbers, For examle: 1.3.0. " alt="" coords="104,5,207,32"/>
+</map>
