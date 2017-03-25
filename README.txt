@@ -1,3 +1,5 @@
+Biblioteca estática para depuração do código em tempo de execução.
+
 Compile
 	~$ make clean; make
 
