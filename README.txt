@@ -1,3 +1,4 @@
+#Versão: 0.0.01
 Biblioteca estática para depuração do código em tempo de execução.
 
 Compile
