@@ -71,46 +71,19 @@ INIT_MESSAGE(_CLR_RESET, "\033[0m")
     /**********************************************************************/
 
     /***	SESSION PROTOTIPO DE FUNCOES	*******************************/
-    /**
-     * \brief 
-     * _CLR_NORMAL = 0 \n
-     * _CLR_RED = 1 \n
-     * _CLR_GREEN = 2 \n
-     * _CLR_YELLOW = 3 \n
-     * _CLR_BLUE = 4 \n
-     * _CLR_NAGENTA = 5 \n
-     * _CLR_CYAN = 6 \n
-     * _CLR_WHITE = 7 \n
-     * 
-     * \author 
-     * \date que foi criado 18/10/16 20:49
-     * @param colorId
-     * @return 
-     */
-    char* libDbgGetColor(colorID_t);
 
-    /* 
-     * Get library version. Function returns version and build number of slog 
+    /**
+     * \brief Get library version. Function returns version and build number of llogDbg 
      * library. Return value is char pointer. Argument min is flag for output 
      * format. If min is 1, function returns version in full  format, if flag 
-     * is 0 function returns only version numbers, For examle: 1.0.52.
+     * is 0 function returns only version numbers, For examle: 1.3.0
+     * 
+     * \author Lucio Pintanel
+     * \date que foi criado 18/10/16 20:49
+     * \param min - inteiro para solicitar versao simplificado ou detalhada.
+     * \return verstr - string with version of library
      */
-    const char* libDbgVersion(int min);
-
-    /*
-     * strclr - Colorize string. Function takes color value and string 
-     * and returns colorized string as char pointer. First argument clr 
-     * is color value (if it is invalid, function retunrs NULL) and second 
-     * is string with va_list of arguments which one we want to colorize.
-     */
-    char* libDbgStrClr(char* clr, char* str, ...);
-
-    /*
-     * Return string in slog format. Function takes arguments
-     * and returns string in slog format without printing and
-     * saveing in file. Return value is char pointer.
-     */
-    char* libDbgGet(stLibDbgDate_t *pDate, char *msg, ...);
+    const char* libDbgVersion(char* verstr, size_t sizeVrs, int min);
 
     /*
      * slog - Log exiting process. Function takes arguments and saves
@@ -126,7 +99,7 @@ INIT_MESSAGE(_CLR_RESET, "\033[0m")
      * where log will be saved and second argument conf is config file path
      * to be parsed and third argument lvl is log level for this message.
      */
-    void libDbgInit(const char* fname, const char* conf, int lvl, int flvl, int t_safe);
+    void libDbgInit(const char* conf, int t_safe);
 
 
     /* For include header in CPP code */
