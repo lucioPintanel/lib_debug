@@ -368,19 +368,16 @@ int getConfig(const char *sect, Config *cfg)
 	int ret = 0;
 	//obtem o level de depuracao em console
 	if (CONFIG_OK != ConfigReadInt(cfg, sect, "level", (int *) &gLibDbgFlags.level, 0)) {
-		//printf("libDbgFlags.level: %d\n", libDbgFlags.level);
 		ret = -1;
 	}
 
 	//obtem o leve de depuracao em arquivo
 	if (CONFIG_OK != ConfigReadInt(cfg, sect, "file_level", (int *) &gLibDbgFlags.file_level, 0)) {
-		//printf("libDbgFlags.file_level: %d\n", libDbgFlags.file_level);
 		ret = -1;
 	}
 
 	//obtem o valor que habilita ou nao a depuracao em arquivo
 	if (CONFIG_OK != ConfigReadInt(cfg, sect, "to_file", (int *) &gLibDbgFlags.to_file, 0)) {
-		//printf("libDbgFlags.to_file: %d\n", libDbgFlags.to_file);
 		ret = -1;
 	}
 
@@ -532,28 +529,22 @@ int initConfig(Config *cfg)
 	char tmpStr[MAXSTR];
 	//obtem o nome do arquivo de log a ser gerado
 	ConfigReadString(cfg, "CONFIG", "NAMFILE", tmpStr, sizeof(tmpStr), "Poet");
-	//printf("NAMFILE: %s\n", tmpStr);
 	strncpy(gFName, tmpStr, sizeof(gFName));
 
 	//obtem o level de depuracao em console
 	ConfigReadInt(cfg, "CONFIG", "level", &gLibDbgFlags.level, 0);
-	//printf("libDbgFlags.level: %d\n", libDbgFlags.level);
 
 	//obtem o leve de depuracao em arquivo
 	ConfigReadInt(cfg, "CONFIG", "file_level", &gLibDbgFlags.file_level, 0);
-	//printf("libDbgFlags.file_level: %d\n", libDbgFlags.file_level);
 
 	//obtem o valor que habilita ou nao a depuracao em arquivo
 	ConfigReadInt(cfg, "CONFIG", "to_file", &gLibDbgFlags.to_file, 0);
-	//printf("libDbgFlags.to_file: %d\n", libDbgFlags.to_file);
 
 	//obtem o valor que habilita ou nao a depuracao em arquivo
 	ConfigReadInt(cfg, "CONFIG", "pretty", &gLibDbgFlags.pretty, 0);
-	//printf("libDbgFlags.pretty: %d\n", gLibDbgFlags.pretty);
 
 	//obtem o valor que habilita ou nao a depuracao em arquivo
 	ConfigReadInt(cfg, "CONFIG", "filestamp", &gLibDbgFlags.filestamp, 0);
-	//printf("libDbgFlags.filestamp: %d\n", gLibDbgFlags.filestamp);
 
 	return 0;
 }
