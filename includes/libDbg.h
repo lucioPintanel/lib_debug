@@ -24,6 +24,11 @@ extern "C" {
     /**********************************************************************/
 
     /***	SESSION DEFINE, STRUCT, TYPEDEF	*******************************/
+    /*! \def MAXMSG
+	\brief Max size of string.
+     */
+#define MAXMSG 8196
+    
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
 #define LOCATION __FILE__ " : " TOSTRING(__LINE__)
@@ -83,7 +88,40 @@ INIT_MESSAGE(_CLR_RESET, "\033[0m")
      * \param min - inteiro para solicitar versao simplificado ou detalhada.
      * \return verstr - string with version of library
      */
-    const char* libDbgVersion(char* verstr, size_t sizeVrs, int min);
+    const char libDbgVersion_t(char* verstr, size_t sizeVrs, int min);
+
+    /**
+     * \brief funcao que informa a cor em funcao do enum colorID_t
+     * _CLR_NORMAL = 0\n
+     * _CLR_RED = 1\n
+     * _CLR_GREEN = 2\n
+     * _CLR_YELLOW = 3\n
+     * _CLR_BLUE = 4\n
+     * _CLR_NAGENTA = 5\n
+     * _CLR_CYAN = 6\n
+     * _CLR_WHITE = 7\n
+     * 
+     * \author Lucio Pintanel
+     * \date que foi criado 18/10/16 20:49
+     * \param colorId - Index with the position in vector of colorfull
+     * \return lstrColor - String with of color
+     */
+    char* libDbgGetColor(colorID_t colorId);
+
+
+    /**
+     * \brief Colorize string. Function takes color value and string 
+     * and returns colorized string as char pointer. First argument clr 
+     * is color value (if it is invalid, function retunrs NULL) and second 
+     * is string with va_list of arguments which one we want to colorize.
+     * 
+     * \author Lucio Pintanel
+     * \date que foi criado 18/10/16 20:49
+     * \param clr - ponteiro para string com a cor
+     * \param str - ponteira para string que se deseja escrever
+     * \return output - retorna string formatada com a cor e a string passada por parametro
+     */
+    char libDbgStrClr_t(char* output, size_t sizeOut, char* clr, char* str, ...);
 
     /*
      * slog - Log exiting process. Function takes arguments and saves

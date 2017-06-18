@@ -11,9 +11,11 @@
 
 int greet() 
 {
+	char str[256];
+	libDbgVersion_t(str, sizeof(str), 0);
     /* Get and print slog version */
     printf("=========================================\n");
-    printf("libDbg Version: %s\n", libDbgVersion(0));
+    printf("libDbg Version: %s\n", str);
     printf("=========================================\n");
     
     return 0;
@@ -40,7 +42,7 @@ int main()
     * Fourth is max log level on file   
     * Fifth is thread safe flag.
     */
-    libDbgInit("example", "config.cnf", 2, 3, 1);
+    libDbgInit("config.cnf", 1);
 
     /* Log and print something with level 0 */
     libDbg(LOCATION, "CNTXT1", 0, LDBG_LIVE, "Test message with level 0");
@@ -65,8 +67,10 @@ int main()
     * This will never be printed while log level argument is higher than max log level */
     libDbg(LOCATION, "CNTXT2", 4, LDBG_NONE, "[LIVE] Test log with higher level than log max value");
 
+    char lstr[MAXMSG];
+    libDbgStrClr_t(lstr, MAXMSG, libDbgGetColor(_CLR_GREEN),"TEST");
     /* Print something with our own colorized line */
-    libDbg(LOCATION, "CNTXT2", 0, LDBG_NONE, "[%s] This is our own colorized string", libDbgStrClr(libDbgGetColor(_CLR_GREEN),"TEST"));
+    libDbg(LOCATION, "CNTXT2", 0, LDBG_NONE, "[%s] This is our own colorized string", lstr);
 
     return 0;
 }

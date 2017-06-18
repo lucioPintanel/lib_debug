@@ -50,7 +50,7 @@ else
 endif
 
 # compile flags
-CCFLAGS = $(DEBUG) $(OPT) -Wall -std=gnu99 $(INCLUDES) -lrt -lparseFile -lpthread
+CCFLAGS = $(DEBUG) $(OPT) -Wall -std=gnu99 $(INCLUDES) -lparseFile -lpthread
 #parametro a ser paasado para a aplicacao em temppo de compilacao
 CCFLAGS += -D_VERSAO_MAX=$(LIBDBGVERSAO_MAX) \
 			-D_VERSAO_MIN=$(LIBDBGVERSAO_MIN) \

@@ -39,11 +39,6 @@
  */
 #define VERSAO_NRO _VERSAO_NRO
 
-/*! \def MAXMSG
-	\brief Max size of string.
- */
-#define MAXMSG 8196
-
 /*! \def MAXSTR
 	\brief Max size of vetor.
  */
@@ -186,8 +181,7 @@ Config *gConfig = NULL;
  * \param colorId - Index with the position in vector of colorfull
  * \return lstrColor - String with of color
  */
-static char* libDbgGetColor(colorId)
-colorID_t colorId;
+char* libDbgGetColor(colorID_t colorId)
 {
 	int index = (int) colorId;
 	static char lstrColor[MAXMSG];
@@ -263,7 +257,7 @@ const char libDbgVersion_t(char* verstr, size_t sizeVrs, int min)
  * \param str - ponteira para string que se deseja escrever
  * \return output - retorna string formatada com a cor e a string passada por parametro
  */
-static char libDbgStrClr(char* output, size_t sizeOut, char* clr, char* str, ...)
+char libDbgStrClr_t(char* output, size_t sizeOut, char* clr, char* str, ...)
 {
 	/* String buffers */
 	char string[MAXMSG];
@@ -489,7 +483,7 @@ void libDbg(const char *location, const char* context, int level, int flag, cons
 		
 		char loutput[MAXMSG];
 		char lstr[MAXMSG];
-		libDbgStrClr(lstr, MAXMSG, color, alarm);
+		libDbgStrClr_t(lstr, MAXMSG, color, alarm);
 		/* Print output */
 		if (level <= gLibDbgFlags.level || gLibDbgFlags.pretty) {
 			if (flag != LDBG_NONE) snprintf(prints, sizeof(prints), "[%s] %s",
@@ -555,11 +549,11 @@ int initConfig(Config *cfg)
 
 	//obtem o valor que habilita ou nao a depuracao em arquivo
 	ConfigReadInt(cfg, "CONFIG", "pretty", &gLibDbgFlags.pretty, 0);
-	printf("libDbgFlags.pretty: %d\n", gLibDbgFlags.pretty);
+	//printf("libDbgFlags.pretty: %d\n", gLibDbgFlags.pretty);
 
 	//obtem o valor que habilita ou nao a depuracao em arquivo
 	ConfigReadInt(cfg, "CONFIG", "filestamp", &gLibDbgFlags.filestamp, 0);
-	printf("libDbgFlags.filestamp: %d\n", gLibDbgFlags.filestamp);
+	//printf("libDbgFlags.filestamp: %d\n", gLibDbgFlags.filestamp);
 
 	return 0;
 }
