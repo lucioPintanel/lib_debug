@@ -23,14 +23,6 @@ int greet()
 
 int main()
 {
-    /* Used variables */
-    char char_arg[32];
-    int int_arg;
-
-    /* Init args */
-    strncpy(char_arg, "test string", strlen("test string"));
-    int_arg = 69;
-
     /* Greet users */
     greet();
 
@@ -53,13 +45,16 @@ int main()
     /* Log and print something with level 2 */
     libDbg(LOCATION, "CNTXT2", 2, LDBG_INFO, "Info message with level 2");
     
-
     /* Log and print something with level 3 */
     libDbg(LOCATION, "CNTXT1", 3, LDBG_LIVE, "Test message with level 3");
 
+    char char_arg[32];
+    /* Init args */
+    strncpy(char_arg, "test string", strlen("test string"));
     /* Log and print something with char argument */
     libDbg(LOCATION, "CNTXT1", 0, LDBG_DEBUG, "Debug message with char argument: %s", char_arg);
 
+    int int_arg = 69;
     /* Log and print something with int argument */
     libDbg(LOCATION, "CNTXT1", 0, LDBG_ERROR, "Error message with int argument: %d", int_arg);
 
